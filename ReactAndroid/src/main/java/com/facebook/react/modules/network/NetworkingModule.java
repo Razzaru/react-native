@@ -9,6 +9,7 @@ package com.facebook.react.modules.network;
 import android.net.Uri;
 import android.util.Base64;
 
+import android.os.Bundle;
 import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.GuardedAsyncTask;
@@ -645,11 +646,11 @@ public final class NetworkingModule extends ReactContextBaseJavaModule {
   }
 
   private static WritableMap translateHeaders(Headers headers) {
-    WritableMap responseHeaders = Arguments.createMap();
+    Bundle responseHeaders = new Bundle();
     for (int i = 0; i < headers.size(); i++) {
       String headerName = headers.name(i);
       // multiple values for the same header
-      if (responseHeaders.hasKey(headerName)) {
+      if (responseHeaders.containsKey(headerName)) {
         responseHeaders.putString(
             headerName,
             responseHeaders.getString(headerName) + ", " + headers.value(i));
@@ -657,7 +658,7 @@ public final class NetworkingModule extends ReactContextBaseJavaModule {
         responseHeaders.putString(headerName, headers.value(i));
       }
     }
-    return responseHeaders;
+    return Arguments.fromBundle(responseHeaders);
   }
 
   @ReactMethod
